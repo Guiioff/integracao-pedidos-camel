@@ -1,6 +1,6 @@
 package com.upe.estoque_microservice.controller;
 
-import com.upe.estoque_microservice.config.dto.ProdutoRespostaDto;
+import com.upe.estoque_microservice.controller.dto.ProdutoRespostaDto;
 import com.upe.estoque_microservice.service.ProdutoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

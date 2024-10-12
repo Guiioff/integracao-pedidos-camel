@@ -1,6 +1,6 @@
 package com.upe.estoque_microservice.service;
 
-import com.upe.estoque_microservice.config.dto.ProdutoRespostaDto;
+import com.upe.estoque_microservice.controller.dto.ProdutoRespostaDto;
 import com.upe.estoque_microservice.model.Produto;
 import com.upe.estoque_microservice.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;

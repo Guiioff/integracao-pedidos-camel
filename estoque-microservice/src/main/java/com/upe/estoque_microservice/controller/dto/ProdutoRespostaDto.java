@@ -1,4 +1,4 @@
-package com.upe.estoque_microservice.config.dto;
+package com.upe.estoque_microservice.controller.dto;
 
 import lombok.Builder;
 
