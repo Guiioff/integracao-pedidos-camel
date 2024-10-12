@@ -1,11 +1,17 @@
 package com.upe.estoque_microservice.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "tb_produto")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Builder
 public class Produto {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
