@@ -1,6 +1,7 @@
 package com.upe.estoque_microservice.service;
 
 import com.upe.estoque_microservice.config.dto.ProdutoRespostaDto;
+import com.upe.estoque_microservice.model.Produto;
 import com.upe.estoque_microservice.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,5 +26,23 @@ public class ProdutoService {
                     .preco(produto.getPreco())
                     .quantidadeDisponivel(produto.getQuantidadeDisponivel())
                     .build());
+  }
+
+  public void alterarQuantidadeProduto(Long id, Long quantidade) {
+    Produto produto =
+        this.produtoRepository
+            .findById(id)
+            .orElseThrow(
+                () ->
+                    new IllegalArgumentException(
+                        "Nenhum produto foi encontrado com o ID fornecido"));
+
+    if (produto.getQuantidadeDisponivel() < quantidade) {
+      throw new IllegalArgumentException(
+          "A quantidade em estoque é menor que a quantidade solicitada");
+    }
+
+    produto.setQuantidadeDisponivel(produto.getQuantidadeDisponivel() - quantidade);
+    this.produtoRepository.save(produto);
   }
 }
