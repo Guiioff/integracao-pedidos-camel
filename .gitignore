@@ -1,3 +1,5 @@
 /.idea/
 /estoque-microservice/.mvn/
 /estoque-microservice/target/
+/pedidos-microservice/.mvn/
+/pedidos-microservice/target/
