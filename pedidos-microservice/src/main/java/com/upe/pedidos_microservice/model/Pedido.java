@@ -1,5 +1,6 @@
 package com.upe.pedidos_microservice.model;
 
+import com.upe.pedidos_microservice.controller.dtos.PedidoRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,5 +25,11 @@ public class Pedido {
 
     @Column(nullable = false)
     private String nomeCliente;
+
+    public Pedido(PedidoRequestDto dto){
+        this.produtoId = dto.produtoId();
+        this.quantidade = dto.quantidade();
+        this.nomeCliente = dto.nomeCliente();
+    }
 
 }
