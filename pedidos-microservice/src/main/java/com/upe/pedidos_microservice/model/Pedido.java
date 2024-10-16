@@ -17,7 +17,7 @@ public class Pedido {
     private Long id;
 
     @Column(nullable = false)
-    private String produtoId;
+    private Long produtoId;
 
     @Column(nullable = false)
     private int quantidade;
