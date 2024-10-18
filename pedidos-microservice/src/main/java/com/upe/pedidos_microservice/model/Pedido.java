@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "tb_pedido")
@@ -28,10 +29,14 @@ public class Pedido implements Serializable {
     @Column(nullable = false)
     private String nomeCliente;
 
+    @Column(nullable = false)
+    private BigDecimal valorTotal;
+
     public Pedido(PedidoRequestDto dto){
         this.produtoId = dto.produtoId();
         this.quantidade = dto.quantidade();
         this.nomeCliente = dto.nomeCliente();
+        this.valorTotal = dto.valorTotal();
     }
 
 }

@@ -1,4 +1,6 @@
 package com.upe.pedidos_microservice.controller.dtos;
 
-public record PedidoRequestDto(Long produtoId, int quantidade, String nomeCliente) {
+import java.math.BigDecimal;
+
+public record PedidoRequestDto(Long produtoId, int quantidade, String nomeCliente, BigDecimal valorTotal) {
 }
