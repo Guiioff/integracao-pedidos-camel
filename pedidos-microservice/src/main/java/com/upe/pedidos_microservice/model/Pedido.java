@@ -1,6 +1,7 @@
 package com.upe.pedidos_microservice.model;
 
 import com.upe.pedidos_microservice.controller.dtos.PedidoRequestDto;
+import com.upe.pedidos_microservice.model.enums.StatusPedidoEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,11 +33,16 @@ public class Pedido implements Serializable {
     @Column(nullable = false)
     private BigDecimal valorTotal;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StatusPedidoEnum status;
+
     public Pedido(PedidoRequestDto dto){
         this.produtoId = dto.produtoId();
         this.quantidade = dto.quantidade();
         this.nomeCliente = dto.nomeCliente();
         this.valorTotal = dto.valorTotal();
+        this.status = StatusPedidoEnum.PENDENTE;
     }
 
 }
