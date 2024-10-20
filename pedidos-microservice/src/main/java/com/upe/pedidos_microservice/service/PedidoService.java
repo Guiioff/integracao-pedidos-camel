@@ -6,6 +6,7 @@ import com.upe.pedidos_microservice.controller.dtos.PedidoRequestDto;
 import com.upe.pedidos_microservice.model.Pedido;
 import com.upe.pedidos_microservice.repository.PedidoRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.camel.ProducerTemplate;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ public class PedidoService {
     private final PedidoRepository pedidoRepository;
     private final JmsTemplate jmsTemplate;
     private final ObjectMapper objectMapper;
+    private final ProducerTemplate producerTemplate;
 
     @Transactional
     public Pedido salvarPedido(PedidoRequestDto dto){
@@ -23,7 +25,8 @@ public class PedidoService {
 
         try {
             String pedidoJson = converterParaJson(pedido);
-            enviarMensagem(pedidoJson);
+//            enviarMensagem(pedidoJson);
+            producerTemplate.sendBody("direct:processarPedido", pedidoJson);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Erro ao converter Pedido para JSON", e);
         }
