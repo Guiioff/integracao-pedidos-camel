@@ -47,7 +47,7 @@ public class IntegrationRoutes extends RouteBuilder {
         from("direct:enviarParaEstoque")
                 .process(new MessageProcessor())
                 .log("Enviando pedido para o RabbitMQ: ${body}")
-                .to("spring-rabbitmq:estoque-exchange?routingKey=alterar-estoque")
+                .to("spring-rabbitmq:estoque-exchange?routingKey=alterar-estoque&exchangeType=topic")
                 .log("Pedido enviado para o RabbitMQ com sucesso.");
     }
 }
