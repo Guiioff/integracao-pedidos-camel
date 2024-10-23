@@ -1,6 +1,7 @@
 package com.upe.camelhub.camel.route;
 
 import com.upe.camelhub.camel.processor.MessageProcessor;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 
@@ -12,13 +13,19 @@ public class IntegrationRoutes extends RouteBuilder {
 
   @Override
   public void configure() throws Exception {
+    getContext().setStreamCaching(true);
+
     from("direct:enviarParaPagamento")
         .log("Enviando para o ms de pagamento: ${body}")
-        .marshal().json(JsonLibrary.Jackson)
-        .to("http://localhost:8082/pagamentos")
+        .log("Enviando para o ms de pagamento: ${body.getClass}")
+        .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
+        .convertBodyTo(String.class) // Força a conversão para String
+        .unmarshal().json(JsonLibrary.Jackson) // Deserializa para um objeto Map ou POJO
+        .marshal().json(JsonLibrary.Jackson) // Serializa novamente para JSON
+        .to("http://localhost:8082/pagamentos?bridgeEndpoint=true")
         .log("Recebida resposta do pagamento: ${body}");
 
-    from("direct:processarPedido")
+    from("rest:post:/processarPedido")
         .to("direct:enviarParaPagamento")
         .log("Recebida resposta do pagamento: ${body}")
         .unmarshal().json(JsonLibrary.Jackson)
