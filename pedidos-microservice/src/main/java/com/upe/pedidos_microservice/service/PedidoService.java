@@ -30,10 +30,10 @@ public class PedidoService {
         try {
             String pedidoJson = converterParaJson(pedido);
             log.info(pedidoJson);
-//            enviarMensagem(pedidoJson);
+            enviarMensagem(pedidoJson);
 //            producerTemplate.sendBody("direct:processarPedido", pedidoJson);
-            String response = restTemplate.postForObject("http://localhost:8080/camel/processarPedido", pedidoJson, String.class);
-            log.info("Resposta do microsserviço de rotas: " + response);
+//            String response = restTemplate.postForObject("http://localhost:8080/camel/processarPedido", pedidoJson, String.class);
+//            log.info("Resposta do microsserviço de rotas: " + response);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Erro ao converter Pedido para JSON", e);
         }
