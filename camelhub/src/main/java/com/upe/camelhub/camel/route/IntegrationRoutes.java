@@ -1,6 +1,8 @@
 package com.upe.camelhub.camel.route;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.upe.camelhub.camel.processor.ApprovePaymentProcessor;
+import com.upe.camelhub.camel.processor.CancelPaymentProcessor;
 import com.upe.camelhub.camel.processor.MessageProcessor;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
@@ -30,29 +32,15 @@ public class IntegrationRoutes extends RouteBuilder {
                 .log("Recebida resposta do pagamento: ${body}")
                 .unmarshal().json(JsonLibrary.Jackson)
                 .choice()
-                .when(simple("${body['statusPagamento']} == 'APROVADO'"))
-                .setHeader("status", constant("CONCLUIDO"))
-                .process(exchange -> {
-                    Map<String, Object> pedidoMap = exchange.getIn().getBody(Map.class);
-
-                    String originalBody = exchange.getIn().getHeader("originalBody", String.class);
-                    Map<String, Object> originalPedido = new ObjectMapper().readValue(originalBody, Map.class);
-
-                    pedidoMap.put("quantidade", originalPedido.get("quantidade"));
-                    pedidoMap.put("produtoId", originalPedido.get("produtoId"));
-
-                    exchange.getIn().setBody(pedidoMap);
-                })
-                .log("Pagamento aprovado. Status do pedido: CONCLUIDO")
-                .to("direct:enviarParaEstoque")
-                .otherwise()
-                .setHeader("status", constant("CANCELADO"))
-                .process(exchange -> {
-                    Map<String, Object> pedidoMap = exchange.getIn().getBody(Map.class);
-                    pedidoMap.put("status", "CANCELADO");
-                    exchange.getIn().setBody(pedidoMap);
-                })
-                .log("Pagamento rejeitado. Status do pedido: CANCELADO")
+                    .when(simple("${body['statusPagamento']} == 'APROVADO'"))
+                        .setHeader("status", constant("CONCLUIDO"))
+                        .process(new ApprovePaymentProcessor())
+                        .log("Pagamento aprovado. Status do pedido: CONCLUIDO")
+                        .to("direct:enviarParaEstoque")
+                    .otherwise()
+                        .setHeader("status", constant("CANCELADO"))
+                        .process(new CancelPaymentProcessor())
+                        .log("Pagamento rejeitado. Status do pedido: CANCELADO")
                 .end()
                 .log("Status do pedido atualizado: ${header.status}");
 
