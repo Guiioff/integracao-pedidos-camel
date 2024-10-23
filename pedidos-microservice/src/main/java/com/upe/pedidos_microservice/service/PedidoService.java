@@ -6,16 +6,22 @@ import com.upe.pedidos_microservice.controller.dtos.PedidoRequestDto;
 import com.upe.pedidos_microservice.model.Pedido;
 import com.upe.pedidos_microservice.repository.PedidoRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.ProducerTemplate;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PedidoService {
     private final PedidoRepository pedidoRepository;
     private final JmsTemplate jmsTemplate;
     private final ObjectMapper objectMapper;
+    private final ProducerTemplate producerTemplate;
+    private final RestTemplate restTemplate;
 
     @Transactional
     public Pedido salvarPedido(PedidoRequestDto dto){
