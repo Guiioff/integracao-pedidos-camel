@@ -1,13 +1,12 @@
 package com.upe.camelhub.camel.processor;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
-import java.io.IOException;
+import java.util.Map;
 
 @Slf4j
 public class MessageProcessor implements Processor {
@@ -16,16 +15,18 @@ public class MessageProcessor implements Processor {
 
     @Override
     public void process(Exchange exchange) throws Exception {
-        String jsonBody = exchange.getIn().getBody(String.class);
+        Map<String, Object> pedidoMap = exchange.getIn().getBody(Map.class);
 
-        JsonNode jsonNode = objectMapper.readTree(jsonBody);
+        log.info("Corpo recebido pelo MessageProcessor: {}", pedidoMap);
 
-        Long produtoId = jsonNode.path("produtoId").asLong();
-        int quantidade = jsonNode.path("quantidade").asInt();
+        Long produtoId = ((Number) pedidoMap.get("produtoId")).longValue();
+        int quantidade = ((Number) pedidoMap.get("quantidade")).intValue();
 
         ObjectNode resultadoJson = objectMapper.createObjectNode();
         resultadoJson.put("id", produtoId);
         resultadoJson.put("quantidade", quantidade);
+
+        log.info("Resultado a ser enviado: {}", resultadoJson);
 
         byte[] resultadoBytes = objectMapper.writeValueAsBytes(resultadoJson);
 
