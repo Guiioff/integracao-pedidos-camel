@@ -6,18 +6,22 @@ import com.upe.pedidos_microservice.controller.dtos.PedidoRequestDto;
 import com.upe.pedidos_microservice.model.Pedido;
 import com.upe.pedidos_microservice.repository.PedidoRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.ProducerTemplate;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PedidoService {
     private final PedidoRepository pedidoRepository;
     private final JmsTemplate jmsTemplate;
     private final ObjectMapper objectMapper;
     private final ProducerTemplate producerTemplate;
+    private final RestTemplate restTemplate;
 
     @Transactional
     public Pedido salvarPedido(PedidoRequestDto dto){
@@ -25,8 +29,11 @@ public class PedidoService {
 
         try {
             String pedidoJson = converterParaJson(pedido);
+            log.info(pedidoJson);
 //            enviarMensagem(pedidoJson);
-            producerTemplate.sendBody("direct:processarPedido", pedidoJson);
+//            producerTemplate.sendBody("direct:processarPedido", pedidoJson);
+            String response = restTemplate.postForObject("http://localhost:8080/camel/processarPedido", pedidoJson, String.class);
+            log.info("Resposta do microsserviço de rotas: " + response);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Erro ao converter Pedido para JSON", e);
         }
