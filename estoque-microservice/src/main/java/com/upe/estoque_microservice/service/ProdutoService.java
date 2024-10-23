@@ -1,6 +1,8 @@
 package com.upe.estoque_microservice.service;
 
 import com.upe.estoque_microservice.controller.dto.ProdutoRespostaDto;
+import com.upe.estoque_microservice.exception.exceptions.NaoEncontradoException;
+import com.upe.estoque_microservice.exception.exceptions.OperacaoNaoPermitidaException;
 import com.upe.estoque_microservice.model.Produto;
 import com.upe.estoque_microservice.repository.ProdutoRepository;
 import jakarta.transaction.Transactional;
@@ -36,11 +38,10 @@ public class ProdutoService {
             .findById(id)
             .orElseThrow(
                 () ->
-                    new IllegalArgumentException(
-                        "Nenhum produto foi encontrado com o ID fornecido"));
+                    new NaoEncontradoException("Nenhum produto foi encontrado com o ID fornecido"));
 
     if (produto.getQuantidadeDisponivel() < quantidade) {
-      throw new IllegalArgumentException(
+      throw new OperacaoNaoPermitidaException(
           "A quantidade em estoque é menor que a quantidade solicitada");
     }
 
