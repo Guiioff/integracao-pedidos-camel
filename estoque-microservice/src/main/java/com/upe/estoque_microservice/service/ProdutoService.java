@@ -3,6 +3,7 @@ package com.upe.estoque_microservice.service;
 import com.upe.estoque_microservice.controller.dto.ProdutoRespostaDto;
 import com.upe.estoque_microservice.model.Produto;
 import com.upe.estoque_microservice.repository.ProdutoRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +29,7 @@ public class ProdutoService {
                     .build());
   }
 
+  @Transactional
   public void alterarQuantidadeProduto(Long id, Long quantidade) {
     Produto produto =
         this.produtoRepository
