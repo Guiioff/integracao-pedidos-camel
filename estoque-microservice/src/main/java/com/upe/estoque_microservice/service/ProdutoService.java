@@ -7,6 +7,7 @@ import com.upe.estoque_microservice.model.Produto;
 import com.upe.estoque_microservice.repository.ProdutoRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProdutoService {
   private final ProdutoRepository produtoRepository;
 
@@ -47,5 +49,6 @@ public class ProdutoService {
 
     produto.setQuantidadeDisponivel(produto.getQuantidadeDisponivel() - quantidade);
     this.produtoRepository.save(produto);
+    log.info("Removida(s) " + quantidade + " unidade(s) de " + produto.getNome() + " do estoque.");
   }
 }
