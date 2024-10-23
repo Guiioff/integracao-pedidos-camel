@@ -21,9 +21,4 @@ public class PagamentoController {
   public ResponseEntity<PagamentoResponse> validarPagamento(@RequestBody PagamentoRequest request) {
     return ResponseEntity.status(HttpStatus.OK).body(this.service.validarPagamento(request));
   }
-
-  @GetMapping("/pagamentos")
-  public String teste() {
-    return "teste";
-  }
 }
